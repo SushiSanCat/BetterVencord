@@ -199,7 +199,7 @@ define(Function.prototype, "m", {
                         Object.defineProperty(exports, key, {
                             enumerable: true,
                             configurable: true,
-                            get: definition[key],
+                            get: () => definition[key](),
                             set: v => { definition[key] = () => v; },
                         });
                     }
