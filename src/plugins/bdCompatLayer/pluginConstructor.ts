@@ -236,7 +236,13 @@ export async function convertPlugin(BetterDiscordPlugin: string, filename: strin
     if (typeof exports === "object") {
         exports = exports[final.name];
     }
-    final.instance = exports.prototype ? new exports(final) : exports(final);
+    try {
+        final.instance = exports.prototype ? new exports(final) : exports(final);
+    }
+    catch (error) {
+        console.error("Something snapped during instatiation of exports for file:", filename, "The error was:", error);
+        throw error; // let caller handle it (or not lol)
+    }
     // passing the plugin object directly as "meta". what could go wrong??!?!?
     if (typeof final.instance.load === "function") // ESLINT.SHUT. THE. HELL. UP. == IS FINE GOD DANG IT.
         final.instance.load(); // we might crash here but nahhh
