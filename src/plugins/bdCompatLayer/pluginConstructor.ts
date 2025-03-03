@@ -400,6 +400,7 @@ function wrapBetterDiscordPluginCode(pluginCode: string, filename: string) {
     const debugLine = "\ntry{" + codeData + "}catch(e){console.error(e);debugger;}";
     const additionalCode = [
         "const module = { exports: {} };",
+        "const exports = module.exports;",
         "const global = window;",
         "const __filename=BdApi.Plugins.folder+`/" + filename + "`;",
         "const __dirname=BdApi.Plugins.folder;", // should this be set to `sourcePath`?

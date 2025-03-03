@@ -713,29 +713,25 @@ class DOMWrapper {
     constructor(label) {
         this.#label = label;
     }
-    get addStyle() {
-        return (id, css) => {
-            if (arguments.length === 2) {
-                id = arguments[0];
-                css = arguments[1];
-            }
-            else {
-                css = id;
-                id = this.#label;
-            }
-            return DOMHolder.addStyle(id, css);
-        };
+    addStyle(id, css) {
+        if (arguments.length === 2) {
+            id = arguments[0];
+            css = arguments[1];
+        }
+        else {
+            css = id;
+            id = this.#label;
+        }
+        return DOMHolder.addStyle(id, css);
     }
-    get removeStyle() {
-        return id => {
-            if (arguments.length === 1) {
-                id = arguments[0];
-            }
-            else {
-                id = this.#label;
-            }
-            return DOMHolder.removeStyle(id);
-        };
+    removeStyle(id) {
+        if (arguments.length === 1) {
+            id = arguments[0];
+        }
+        else {
+            id = this.#label;
+        }
+        return DOMHolder.removeStyle(id);
     }
     get createElement() {
         return DOMHolder.createElement;
