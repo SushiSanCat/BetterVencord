@@ -215,8 +215,12 @@ export async function reloadCompatLayer() {
             getGlobalApi().Plugins.folder + "/" + element,
             "utf8"
         );
-        convertPlugin(pluginJS, element, true, getGlobalApi().Plugins.folder).then(plugin => {
+        const conv = convertPlugin(pluginJS, element, true, getGlobalApi().Plugins.folder);
+        conv.then(plugin => {
             addCustomPlugin(plugin);
+        });
+        conv.catch(what => {
+            console.error("Error during conversion of", element, "what was:", what);
         });
     }
 }
@@ -363,6 +367,7 @@ export const FSUtils = {
                 }
                 filePath += file.name;
             }
+            console.log("Resolved path:", filePath);
             fs.writeFile(
                 filePath,
                 // window.BrowserFS.BFSRequire("buffer").Buffer.from(
@@ -370,7 +375,11 @@ export const FSUtils = {
                 FSUtils.toBuffer(
                     await file.arrayBuffer()
                 ),
-                () => { }
+                err => {
+                    if (err)
+                        console.error("Error during import",err);
+                    console.log("Success");
+                }
             );
         }
     },
