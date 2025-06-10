@@ -18,6 +18,10 @@
 
 export declare function monkeyPatch(what: any, methodName: any, options: any);
 export declare function getModule(filter: any, options?: any);
+export declare const ReactUtils_filler: {
+    setup: (DiscordModules: any) => void;
+    wrapElement: (element: HTMLElement) => void;
+};
 export declare class Patcher {
     static before(...args): any;
     static instead(...args): any;

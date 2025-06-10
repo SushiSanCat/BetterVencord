@@ -355,7 +355,7 @@ export const FSUtils = {
     },
     async importFile(targetPath: string, autoGuessName: boolean = false, bulk = false, filter: string | undefined = undefined) {
         const fileOrFiles = await openFileSelect(filter, bulk);
-        const files = fileOrFiles.length ? (fileOrFiles as File[]) : [fileOrFiles as File];
+        const files = Array.isArray(fileOrFiles) ? (fileOrFiles as File[]) : [fileOrFiles as File];
         const fs = window.require("fs");
         const path = window.require("path");
         for (const file of files) {

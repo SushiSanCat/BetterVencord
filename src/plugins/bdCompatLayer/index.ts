@@ -21,9 +21,10 @@
 // import { readFileSync } from "fs";
 // const process = require("~process");
 import { Settings } from "@api/Settings";
+import { copyToClipboard } from "@utils/clipboard";
 import { Devs } from "@utils/constants";
 import definePlugin, { OptionType, PluginDef } from "@utils/types";
-import { Clipboard, React } from "@webpack/common";
+import { React } from "@webpack/common";
 
 import { PluginMeta } from "~plugins";
 
@@ -32,6 +33,7 @@ import { cleanupGlobal, createGlobalBdApi, getGlobalApi } from "./fakeBdApi";
 import { addContextMenu, addDiscordModules, FakeEventEmitter, fetchWithCorsProxyFallback, Patcher } from "./fakeStuff";
 import { injectSettingsTabs, unInjectSettingsTab } from "./fileSystemViewer";
 import { addCustomPlugin, convertPlugin, removeAllCustomPlugins } from "./pluginConstructor";
+import { ReactUtils_filler } from "./stuffFromBD";
 import { aquireNative, FSUtils, getDeferred, reloadCompatLayer, simpleGET, ZIPUtils } from "./utils";
 // String.prototype.replaceAll = function (search, replacement) {
 //     var target = this;
@@ -428,11 +430,12 @@ const thePlugin = {
                 return try1.clipboard;
             }
             return {
-                copy: Clipboard.copy,
+                copy: copyToClipboard,
             };
         })();
 
         const injectedAndPatched = new Promise<void>((resolve, reject) => {
+            ReactUtils_filler.setup({ React: React });
             addDiscordModules(proxyUrl).then(DiscordModulesInjectorOutput => {
                 const DiscordModules = DiscordModulesInjectorOutput.output;
                 const makeOverrideOriginal = Patcher.makeOverride;
@@ -468,7 +471,7 @@ const thePlugin = {
         //         return;
         //     clearInterval(checkInterval);
         Promise.all([windowBdCompatLayer.fsReadyPromise.promise, injectedAndPatched]).then(() => {
-            getGlobalApi().DOM.addStyle("bd-compat-layer-stuff", '.bd-compat-setting > div > h2 { display: none; } .bd-compat-setting label { height: 0px; } .bd-compat-setting div[class^="labelRow_"] { height: 0px; }');
+            getGlobalApi().DOM.addStyle("bd-compat-layer-stuff", '.bd-compat-setting > div > h2 { display: none; } .bd-compat-setting label { height: 0px; width: 0px; } .bd-compat-setting div[class^="labelRow_"] { height: 0px; }');
             windowBdCompatLayer.Router?.listeners.add(windowBdCompatLayer.mainRouterListener);
             const observer = new MutationObserver(mutations => mutations.forEach(m => window.GeneratedPlugins.forEach(p => BdApiReImplementation.Plugins.isEnabled(p.name) && p.instance.observer?.(m))));
             observer.observe(document, {

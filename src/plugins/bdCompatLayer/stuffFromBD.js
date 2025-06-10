@@ -360,4 +360,33 @@ function getModule(filter, options = {}) {
     return first || rm.length == 0 ? undefined : rm;
 }
 
-export { getModule, monkeyPatch, Patcher };
+const ReactUtils_filler = {
+    DiscordModules: {},
+    setup(DiscordModules) {
+        this.DiscordModules = DiscordModules;
+    },
+    /**
+     * @summary Code taken from BetterDiscord (sourced from commit: 9f08d7cbf5d41c24bb00d3575cf820d7e17a4039)
+     * @description Changes:
+     *
+     *  Added local DiscordModules destructure from `this`.
+     *
+     *  Formatting changed
+     */
+    wrapElement(element) {
+        const { DiscordModules } = this;
+        return class ReactWrapper extends DiscordModules.React.Component {
+            constructor(props) {
+                super(props);
+                this.ref = DiscordModules.React.createRef();
+                this.element = element;
+                this.state = { hasError: false };
+            }
+            componentDidCatch() { this.setState({ hasError: true }); }
+            componentDidMount() { this.ref.current.appendChild(this.element); }
+            render() { return this.state.hasError ? null : DiscordModules.React.createElement("div", { className: "react-wrapper", ref: this.ref }); }
+        };
+    }
+}
+
+export { getModule, monkeyPatch, Patcher, ReactUtils_filler };

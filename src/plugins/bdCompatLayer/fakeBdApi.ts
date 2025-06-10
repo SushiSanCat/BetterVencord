@@ -37,8 +37,8 @@ import { Forms, Text } from "@webpack/common";
 import { PLUGIN_NAME } from "./constants";
 import { fetchWithCorsProxyFallback } from "./fakeStuff";
 import { AssembledBetterDiscordPlugin } from "./pluginConstructor";
-import { getModule as BdApi_getModule, monkeyPatch as BdApi_monkeyPatch, Patcher } from "./stuffFromBD";
-import { addLogger, docCreateElement } from "./utils";
+import { getModule as BdApi_getModule, monkeyPatch as BdApi_monkeyPatch, Patcher, ReactUtils_filler } from "./stuffFromBD";
+import { addLogger, createTextForm, docCreateElement } from "./utils";
 
 class PatcherWrapper {
     #label;
@@ -149,10 +149,10 @@ export const WebpackHolder = {
                 );
             };
         },
-        byPrototypeKeys(fields) {
+        byPrototypeKeys(...fields) {
             return x =>
                 x.prototype &&
-                fields.every(field => field in x.prototype);
+                [...fields.flat()].every(field => field in x.prototype);
         },
     },
     getModule: BdApi_getModule,
@@ -228,7 +228,7 @@ export const WebpackHolder = {
     },
     getByStrings(...strings) {
         const moreOpts = getOptions(strings);
-        return this.getModule(this.Filters.byStrings(...strings), moreOpts);
+        return this.getModule(this.Filters.byStrings(...strings.flat()), moreOpts);
     },
     getBySource(...strings) {
         const moreOpts = getOptions(strings);
@@ -268,6 +268,90 @@ export const WebpackHolder = {
     },
     get getMangled() {
         return Vencord.Webpack.mapMangledModule;
+    },
+    getWithKey(filter, options: { target?: any } = {}) {
+        const { target: opt_target = null, ...unrelated } = options;
+        const cache = {
+            target: opt_target,
+            key: undefined as undefined | string,
+        };
+        let iterationCount = 0;
+        const keys = ["0", "1", "length"];
+        return new Proxy<never[]>([], {
+            get(_, prop) {
+                if (typeof prop === "symbol") {
+                    if (prop === Symbol.iterator) {
+                        return function* (this: ProxyHandler<never[]>) {
+                            yield this.get!(_, "0", undefined);
+                            yield this.get!(_, "1", undefined);
+                        }.bind(this);
+                    }
+                    if (prop === Symbol.toStringTag) return "Array";
+                    return Reflect.get(Array.prototype, prop, _);
+                }
+                if (prop === "next") { // not sure about this one
+                    return () => {
+                        if (iterationCount === 0) {
+                            iterationCount++;
+                            return { value: this.get!(_, "0", undefined), done: false };
+                        } else if (iterationCount === 1) {
+                            iterationCount++;
+                            return { value: this.get!(_, "1", undefined), done: false };
+                        } else {
+                            return { value: undefined, done: true };
+                        }
+                    };
+                }
+
+                switch (prop) {
+                    case "0":
+                        if (cache.target === null) {
+                            cache.target = WebpackHolder.getModule(
+                                mod => Object.values(mod).some(filter),
+                                unrelated,
+                            );
+                        }
+                        return cache.target;
+
+                    case "1":
+                        if (cache.target === null) {
+                            this.get!(_, "0", undefined);
+                        }
+                        if (cache.key === undefined && cache.target !== null) {
+                            cache.key = cache.target
+                                ? Object.keys(cache.target).find(k => filter(cache.target[k]))
+                                : undefined;
+                        }
+                        return cache.key;
+
+                    case "length":
+                        return 2;
+
+                    default:
+                        return undefined;
+                }
+            },
+
+            has(_, prop) {
+                return keys.includes(prop.toString());
+            },
+
+            getOwnPropertyDescriptor(_, prop) {
+                if (keys.includes(prop.toString())) {
+                    return {
+                        value: this.get!(_, prop, undefined),
+                        enumerable: prop.toString() !== "length",
+                        configurable: true,
+                        writable: false,
+                    };
+                }
+                return undefined;
+            },
+
+            ownKeys() {
+                return keys;
+            },
+        });
     },
 };
 
@@ -350,6 +434,8 @@ type SettingsType = {
     value?: any,
     options?: { label: string, value: number }[],
 };
+
+const _ReactDOM_With_createRoot = {} as typeof Vencord.Webpack.Common.ReactDOM & { createRoot: typeof Vencord.Webpack.Common.createRoot };
 
 export const UIHolder = {
     alert(title: string, content: any) {
@@ -628,7 +714,7 @@ export const UIHolder = {
                     }
                     default: {
                         fakeOption.type = OptionType.COMPONENT;
-                        (fakeOption as unknown as PluginOptionComponent).component = () => { return React.createElement(React.Fragment); };
+                        (fakeOption as unknown as PluginOptionComponent).component = () => { return React.createElement(React.Fragment, {}, `Remind Davilarek to add setting of type: ${current.type}!\nThis is a placeholder.`); };
                         break;
                     }
                 }
@@ -705,6 +791,15 @@ export const DOMHolder = {
             .querySelector("bd-scripts")?.querySelector(`#${targetName}`);
         if (theRemoteScript != null)
             theRemoteScript.remove();
+    },
+    parseHTML(html: string, asFragment = false) {
+        const template = document.createElement("template");
+        template.innerHTML = html.trim();
+        if (asFragment) {
+            return template.content.cloneNode(true);
+        }
+        const { childNodes } = template.content;
+        return childNodes.length === 1 ? childNodes[0] : childNodes;
     },
 };
 
@@ -792,6 +887,65 @@ class BdApiReImplementationInstance {
                 { searchExports: true }
             );
         },
+        get Text() {
+            return Vencord.Webpack.Common.Text;
+        },
+        SwitchInput(props: { id: string, value: boolean, onChange: (v: boolean) => void }) {
+            return getGlobalApi().UI.buildSettingsPanel({
+                settings: [{
+                    id: props.id,
+                    name: "",
+                    type: "switch",
+                    value: props.value,
+                }],
+                onChange(c, id, v: boolean) {
+                    props.onChange(v);
+                },
+            });
+        },
+        SettingGroup(props: { id: string, name: string, children: React.ReactNode | React.ReactNode[] }) {
+            return Vencord.Webpack.Common.React.createElement("span", {}, [getGlobalApi().UI.buildSettingsPanel({
+                settings: [{
+                    id: props.id,
+                    name: props.name,
+                    type: "category",
+                    settings: [],
+                }],
+                onChange(c, id, v) { },
+            })], props.children); // ew
+        },
+        SettingItem(props: { id: string, name: string, note: string, children: React.ReactNode | React.ReactNode[] }) {
+            // return Vencord.Webpack.Common.React.createElement("div", {
+            //     id: `bd_compat-item-${props.id}`,
+            // }, [props.name, props.note, props.children]);
+            const opt = OptionType.COMPONENT;
+            const fakeElement = VenComponents[opt] as typeof VenComponents[keyof typeof VenComponents];
+            return Vencord.Webpack.Common.React.createElement("div", undefined, [Vencord.Webpack.Common.React.createElement(fakeElement, {
+                id: `bd_compat-item-${props.id}`,
+                key: `bd_compat-item-${props.id}`,
+                option: {
+                    type: opt,
+                    component: () => createTextForm(props.name, props.note, false),
+                },
+                onChange(newValue) { },
+                onError() { },
+                pluginSettings: { enabled: true, },
+            }), props.children]);
+        },
+        RadioInput(props: { name: string, onChange: (new_curr: string) => void, value: any, options: { name: string, value: any }[] }) {
+            return getGlobalApi().UI.buildSettingsPanel({
+                settings: [{
+                    id: `bd_compat-radio-${props.name}`,
+                    name: props.name,
+                    type: "dropdown",
+                    value: props.value,
+                    options: props.options.map(x => ({ label: x.name, value: x.value }))
+                }],
+                onChange(c, id, v: string) {
+                    props.onChange(v);
+                },
+            });
+        },
     };
     get React() {
         return Vencord.Webpack.Common.React;
@@ -805,12 +959,37 @@ class BdApiReImplementationInstance {
     enableSetting(collection, category, id) { }
     disableSetting(collection, category, id) { }
     get ReactDOM() {
-        return WebpackHolder.getModule(x => x.render && x.findDOMNode);
+        if (_ReactDOM_With_createRoot.createRoot === undefined)
+            Object.assign(_ReactDOM_With_createRoot, { ...Vencord.Webpack.Common.ReactDOM, createRoot: Vencord.Webpack.Common.createRoot });
+        return _ReactDOM_With_createRoot;
     }
     get ReactUtils() {
         return {
+            get wrapElement() {
+                return ReactUtils_filler.wrapElement.bind(ReactUtils_filler);
+            },
             getInternalInstance(node: Node & any) {
                 return node.__reactFiber$ || node[Object.keys(node).find(k => k.startsWith("__reactInternalInstance") || k.startsWith("__reactFiber")) as string] || null;
+            },
+            isMatch(fiber: any, isInclusive: boolean, targetList: string[]): boolean {
+                const type = fiber?.type;
+                const name = type?.displayName || type?.name;
+                if (!name) return false;
+                return isInclusive === targetList.includes(name);
+            },
+            // based on https://github.com/BetterDiscord/BetterDiscord/blob/d97802bfa7dd8987aa6a2bda37d8fe801502000d/src/betterdiscord/api/reactutils.ts#L120
+            getOwnerInstance(el: HTMLElement, opt = { include: undefined, exclude: ["Popout", "Tooltip", "Scroller", "BackgroundFlash"], filter: (_: any) => true }) {
+                const targetList = opt.include ?? opt.exclude;
+                const isInclusive = !!opt.include;
+                let fiberNode = getGlobalApi().ReactUtils.getInternalInstance(el);
+                while (fiberNode?.return) {
+                    fiberNode = fiberNode.return;
+                    const instance = fiberNode.stateNode;
+                    if (instance && typeof instance !== "function" && typeof instance !== "string" && getGlobalApi().ReactUtils.isMatch(fiberNode, isInclusive, targetList) && opt.filter(instance)) {
+                        return instance;
+                    }
+                }
+                return null;
             }
         };
     }
