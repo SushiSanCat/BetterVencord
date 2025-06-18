@@ -284,4 +284,22 @@ You can now import and use most BetterDiscord plugins in BetterVencord!
 
 ---
 
+## 🔗 Explore More Plugins!
+
+Looking for even more ways to enhance your Discord experience?
+
+### 🌟 **BetterDiscord Plugins**
+- Browse hundreds of community plugins at [BetterDiscord Plugins](https://betterdiscord.app/plugins)
+- To import a plugin, simply use the following link in BetterVencord:
+  ```
+  @https://betterdiscord.app/plugins
+  ```
+
+### 🚀 **Vencord Plugins**
+- Discover official and community plugins at [Vencord Plugins](https://vencord.dev/plugins)
+
+> 💡 **Tip:** Many BetterDiscord plugins work in BetterVencord when using the BD Compatibility Layer. Explore both plugin libraries for the best experience!
+
+---
+
 > "it's called Vencord because it's made by ven,<br> it's called BetterVencord because it's better than Vencord"<br> <sub>- Davilarek</sub>
