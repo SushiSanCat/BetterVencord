@@ -1,162 +1,183 @@
-## In a galaxy of coding capers... When BetterDiscord and Vencord dared to merge...
-## Behold... BetterVencord!
-![image](https://github.com/Davilarek/Vencord/assets/62715937/7126afa2-6086-4675-9427-e3f0cf542651)
+# 🚀 **BetterVencord**
 
-A Forceful Blend of Discord Awesomeness! 🌌🚀🤖
+> **A Forceful Blend of Discord Awesomeness!**
 
-## Note for plugin devs
-Don't fork this repo to make plugins for Vencord.
-We will pull changes from upstream, so if you want to make a plugin for Vencord but have it in BV, just wait for us to pull from upstream.
+![BetterVencord Banner](https://github.com/Davilarek/Vencord/assets/62715937/7126afa2-6086-4675-9427-e3f0cf542651)
 
-## Features
+<p align="center">
+  <img src="https://img.shields.io/github/stars/Davilarek/Vencord?style=social" alt="GitHub stars">
+  <img src="https://img.shields.io/badge/Platform-Discord-blue" alt="Platform">
+  <img src="https://img.shields.io/badge/License-MIT-green" alt="License">
+</p>
 
--   Easy to install
--   [100+ built in plugins](https://vencord.dev/plugins)
--   Fairly lightweight despite the many inbuilt plugins
--   Excellent Browser Support: Run Vencord in your Browser via extension or UserScript
--   Works on any Discord branch: Stable, Canary or PTB all work
--   Custom CSS and Themes: Inbuilt css editor with support to import any css files (including BetterDiscord themes)
--   Privacy friendly: blocks Discord analytics & crash reporting out of the box and has no telemetry
--   Maintained very actively, broken plugins are usually fixed within 12 hours
--   Settings sync: Keep your plugins and their settings synchronised between devices / apps (optional)
--   BdApi Compatibility : Allows (most) BetterDiscord plugins to be ran as if it was normal BetterDiscord!
+---
 
-***
-> [!NOTE]
-> External Sources were used.
-> - BrowserFS: https://github.com/jvilk/BrowserFS
-> - Some of BetterDiscord's code: https://github.com/Davilarek/Vencord/blob/main/src/plugins/bdCompatLayer/stuffFromBD.js
+## 📚 Table of Contents
+- [About](#about)
+- [Features](#features)
+- [Installation](#installation)
+- [Troubleshooting](#troubleshooting)
+- [Using BetterVencord](#using-bettervencord)
+- [Importing & Managing BD Plugins](#importing--managing-bd-plugins)
+- [Uninstalling](#uninstalling)
+- [Updating](#updating)
+- [Disclaimer](#disclaimer)
 
-> "it's called Vencord because it's made by ven,<br>
-> it's called BetterVencord because it's bettter than Vencord"<br>
-> \- Davilarek
+---
 
-## Installation instructions (primarily for Linux but may work for Windows)
-### Install pnpm and nodejs
-[Node.js](https://nodejs.org/en) I recommend LTS version,
+## 🌌 About
+**BetterVencord** is the ultimate fusion of [BetterDiscord](https://betterdiscord.app/) and [Vencord](https://vencord.dev/), bringing you the best of both worlds:
+- Seamless plugin support
+- Custom themes
+- Enhanced privacy
+- Cross-platform compatibility
 
-[pnpm](https://pnpm.io/installation)
-### Obtaining source
-```
+> **Note for Plugin Developers:**
+> Don't fork this repo to make plugins for Vencord. We regularly pull from upstream. If you want your plugin in BV, just wait for us to sync.
+
+---
+
+## ✨ Features
+- **Easy Installation**
+- **100+ Built-in Plugins** ([Browse Plugins](https://vencord.dev/plugins))
+- **Lightweight** despite many features
+- **Browser Support:** Use as extension or UserScript
+- **Works on All Discord Branches:** Stable, Canary, PTB
+- **Custom CSS & Themes:** Import any CSS, including BetterDiscord themes
+- **Privacy Friendly:** Blocks Discord analytics & crash reporting, no telemetry
+- **Active Maintenance:** Broken plugins usually fixed within 12 hours
+- **Settings Sync:** Sync plugins/settings across devices (optional)
+- **BD API Compatibility:** Run most BetterDiscord plugins natively!
+
+> **External Sources Used:**
+> - [BrowserFS](https://github.com/jvilk/BrowserFS)
+> - [BetterDiscord code](https://github.com/Davilarek/Vencord/blob/main/src/plugins/bdCompatLayer/stuffFromBD.js)
+
+---
+
+## ⚡ Installation
+
+### 1. Prerequisites
+- [Node.js (LTS recommended)](https://nodejs.org/en)
+- [pnpm](https://pnpm.io/installation)
+
+### 2. Clone the Source
+```sh
 git clone https://github.com/Davilarek/Vencord.git
 cd Vencord
 ```
-### Compiling source
-[BetterVencord](https://github.com/Davilarek/Vencord) needs to be compiled:
-```
+
+### 3. Compile
+```sh
 pnpm install --frozen-lockfile
 pnpm build --standalone
-```
-
-```
+# For web usage (optional):
 pnpm buildWeb --standalone
 ```
-Could be optionally run if you intend to use BetterVencord on the web, like ArmCord, or Discord in a browser.
+- Compiled files will be in the `dist` folder. Keep this folder intact for BetterVencord to work.
 
-After compile has finished, the resulting files in `dist` is required to be left intact, in order to maintain BetterVencord functionality. The rest of the source could be optionally removed. Should you wish to keep the source, you could for instance, set it up to have partial update functionality (see `Updating` section below), and/or for implementing other third party Vencord plugins
+### 4. Install Vencord
+- Run [Vencord's official installer](https://github.com/Vendicated/Vencord#installing--uninstalling).
+- **Windows:** If your Discord install path is protected, run the installer as admin.
 
-### Troubleshooting
-If for whatever reason you are an error during `pnpm install` e.g.
-```
-pnpm install
- ERR_PNPM_BAD_PM_VERSION  This project is configured to use v8.10.2 of pnpm. Your current pnpm is v9.1.0
+### 5. Copy Files
+- **Backup your Vencord user data!**
+  - Linux: `$XDG_CONFIG_HOME/Vencord/` (usually `~/.config/Vencord/`)
+  - Windows: `%appdata%/Vencord`
+- Copy your compiled `dist` folder into your Vencord user data directory.
 
-If you want to bypass this version check, you can set the "package-manager-strict" configuration to "false" or set the "COREPACK_ENABLE_STRICT" environment variable to "0"
-```
+---
 
-This is set by `package.json`
+## 🛠️ Troubleshooting
 
-You have few options:
-* export the variable `COREPACK_ENABLE_STRICT=0` via either `export COREPACK_ENABLE_STRICT=0` or `set COREPACK_ENABLE_STRICT=0`,
-* (less ideal), downgrade/install the older, required version, 8.10.2 and retry running `pnpm install` again.
-* (not recommended) edit `package.json` so that it correctly matches your installed `pnpm` version, and retry running `pnpm install` again.
+### **pnpm Version Error**
+> **Error:**
+> `ERR_PNPM_BAD_PM_VERSION  This project is configured to use v8.10.2 of pnpm. Your current pnpm is v9.1.0`
 
-## My plugin that uses network fails to load, what to do?
-In BD Compat Layer, there is a toggle "Enable Experimental Request Polyfills" that allows plugins to use network.
-## My BV install shows filesystem failed to load, what to do?
-There are some occasions you might see that error,
-#### Issue #1
-Steps to confirm:
-1. Open console
-2. Scroll up to the point you see " Vencord   PluginManager  Starting plugin BD Compatibility Layer"
-3. Look around there for errors
-4. If you see something like `Access to fetch at https://xxxxxx/xxxxx from origin 'discord.com' has been blocked by CORS policy` 4 times close to eachother, it's likely this is your issue.
+**Solutions:**
+- Set `COREPACK_ENABLE_STRICT=0` (Linux: `export`, Windows: `set`)
+- Downgrade to pnpm 8.10.2
+- (Not recommended) Edit `package.json` to match your pnpm version
 
-Solution:
-1. Find a suitable replacement for your CORS proxy url. It's up to the user to find an appropriate substitute for the cors proxy url. The default one is just an example.
-2. Open BD Compat Layer settings
-3. Paste the url you found in first step into "CORS proxy used to bypass CORS" field
-4. Reload
-#### Issue #2
-Steps to confirm:
-1. You have enabled "Use Indexed DB Instead".
-2. You have a small amount of RAM installed or a small amount of free space.
-3. Open console
-4. See Out of Memory Error
+### **Filesystem Failed to Load?**
+#### **Issue 1: CORS Proxy Error**
+- Check console for CORS errors near `PluginManager Starting plugin BD Compatibility Layer`.
+- **Fix:** Find a working CORS proxy URL, set it in BD Compat Layer settings, and reload.
 
-Solution:
-There is no known fix for this issue right now. Try adding more RAM, perhaps.
-#### Issue #3
-Stepts to confirm:
-1. You have not enabled "Use Indexed DB Instead".
-2. You store large data (>10 MB) in Virtual Filesystem.
+#### **Issue 2: Out of Memory**
+- If using "Use Indexed DB Instead" and have low RAM/disk, you may see this error.
+- **Fix:** Add more RAM or free up space.
 
-Solution:
-There is a limit on localStorage size that varies on different platforms. If possible try migrating to IndexedDB.
+#### **Issue 3: Large Data in Virtual Filesystem**
+- If not using IndexedDB and storing >10MB, you may hit localStorage limits.
+- **Fix:** Migrate to IndexedDB if possible.
 
-### Installing
-Run [Vencord's official installer](https://github.com/Vendicated/Vencord#installing--uninstalling) first. If your discord installation path includes files or directories that are not owned by you, or that you are not a member of, or you have no write access to, ensure that you run the installer as a privileged account. Vencord needs to patch `app.asar`.
+---
 
-Once done,
-1. Backup your Vencord user data first. On Linux for example is defined by [`XDG_CONFIG_HOME`](https://github.com/Vencord/Installer/blob/main/install.sh), as `$HOME/.config/Vencord/`, on Windows, try checking `%appdata%/Vencord`.
-2. Copy your compiled BetterVencord's `dist` directory/folder into own Vencord user data.
+## 🚀 Using BetterVencord
+- Functions like Vencord, but with a **BD Compatibility Layer** under Plugins.
+- **Enable BD Compatibility Layer** to use BetterDiscord plugins.
+- Once enabled, you'll see a "Virtual Filesystem" menu under Backup & Restore.
 
-## Using
-Once installed, BetterVencord functions similar to Vencord but with BD Compatibility Layer under Plugins. This needs to be enabled first before you can add [BetterDiscord](https://betterdiscord.app/) plugin(s). A successful enabling of BD Compatibility Layer will show up an extra menu entry (on the left of discord UI) as Virtual Filesystem, under Backup & Restore. To then add BetterDiscord plugins, in Virtual Filesystem, left click on `/`, then `BD`, then right click on `plugins`, and click on Import a file here.
+---
 
-### Importing BD plugins
-#### First BD plugin import
-BetterVencord will not function properly if BD plugins are missing [ZeresPluginLibrary](https://github.com/rauenzi/BDPluginLibrary), the BD Compatibility Layer does not provide this library either. You will need to click on the link download the file somewhere temporarily, then import the ZeresPluginLibrary. See the next section about adding BD plugins.
+## 📦 Importing & Managing BD Plugins
 
-#### Subsequent importing BD plugins
-Newly imported plugins will not be immediately visible. To make it visible, collapse the plugins directory/folder then expand it again. This should ideally be done to visually confirm that the BD plugin has imported into the Virtual Filesystem, prior to enabling BD plugins to be visible within Vencord's plugin list. To do that, you will need to click on Reload BD Plugins, so that these changes should take effect under Vencord → Plugins. Confirm that the BD plugin has its own entry within Vencord. If the imported BD plugin does not have its own entry within the list of Plugins, it may not be compatible with BetterVencord, and should therefore be removed.
+### **First Time Import**
+> **Important:** Most BD plugins require [ZeresPluginLibrary](https://github.com/rauenzi/BDPluginLibrary). Download and import it first.
 
-### Removing BD plugins
-To remove BD plugins from BetterVencord, navigate to plugins directory/folder as mentioned above. Right click on the BD plugin that you wish to remove, and click on Delete file. You should also visually confirm that the removed BD plugin is no longer visible via collapsing and expanding plugins directory/folder. Once that is done, make sure you hit the Reload BD Plugins button to have changes take effect.
+**To Import:**
+1. In Virtual Filesystem, left-click `/`, then `BD`, then right-click `plugins` → Import a file here.
+2. Collapse and expand the plugins folder to confirm import.
+3. Click **Reload BD Plugins** to activate.
 
-## Uninstalling
-It should be possible to uninstall BetterVencord via Vencord's official installer tool. If that fails, you will need to revert changes done to your Vencord user data path first, before running the uninstaller. If you do not have a backup for whatever reason, try deleting your Vencord user data directory or folder first, run through Vencord's official installer to install, then try uninstalling.
+**If a plugin doesn't appear:**
+- It may not be compatible. Remove it as above.
 
-## Updating
-You should keep the source code you cloned in first step to be able to update BV.
+### **Removing BD Plugins**
+1. Right-click the plugin in Virtual Filesystem → Delete file.
+2. Collapse/expand to confirm removal.
+3. Click **Reload BD Plugins**.
 
-First, you `cd` to your directory where you cloned the source code.
+---
 
-Then,
-```
+## 🧹 Uninstalling
+- Use Vencord's official installer to uninstall.
+- If that fails, revert your Vencord user data, then run the installer again.
+- No backup? Delete your Vencord user data directory, reinstall, then uninstall.
+
+---
+
+## 🔄 Updating
+1. `cd` to your cloned source directory.
+2. Run:
+```sh
 git fetch
 git pull
 ```
-and then repeat compiling steps.
+3. Repeat the compile steps above.
 
-## Disclaimer
+---
 
-Discord is trademark of Discord Inc. and solely mentioned for the sake of descriptivity.
-Mention of it does not imply any affiliation with or endorsement by Discord Inc.
-
-## Read this....
-For people who don't see it. Before you can *actually* use BetterVencord for the purpose of running BetterDiscord plugins on Vencord, You actually have to enable the compatibility layer for any BetterDiscord plugin to work.
-***BD Compatibility Layer*** is a plugin that is ***NEEDED*** for BetterVencord to actually ***run*** BetterDiscord plugins.
+## ⚠️ Disclaimer
+> **Discord is a trademark of Discord Inc.**
+> This project is not affiliated with or endorsed by Discord Inc.
 
 <details>
-<summary>Using Vencord violates Discord's terms of service</summary>
+<summary>Using Vencord violates Discord's Terms of Service</summary>
 
-Client modifications are against Discord’s Terms of Service.
-
-However, Discord is pretty indifferent about them and there are no known cases of users getting banned for using client mods! So you should generally be fine as long as you don’t use any plugins that implement abusive behaviour. But no worries, all inbuilt plugins are safe to use!
-
-Regardless, if your account is very important to you and it getting disabled would be a disaster for you, you should probably not use any client mods (not exclusive to Vencord), just to be safe
-
-Additionally, make sure not to post screenshots with Vencord in a server where you might get banned for it
+- Client mods are against Discord's ToS.
+- Discord is generally indifferent; no known bans for using Vencord.
+- Avoid abusive plugins and posting screenshots in sensitive servers.
+- If your account is critical, avoid client mods to be safe.
 
 </details>
+
+---
+
+## 🛑 **Read This Before Using!**
+> To run BetterDiscord plugins on Vencord, you **must enable the BD Compatibility Layer** plugin first. Without it, BD plugins will not work!
+
+---
+
+> "it's called Vencord because it's made by ven,<br> it's called BetterVencord because it's better than Vencord"<br> <sub>- Davilarek</sub>
