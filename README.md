@@ -22,6 +22,7 @@
 - [Uninstalling](#uninstalling)
 - [Updating](#updating)
 - [Disclaimer](#disclaimer)
+- [Adding Custom Plugins in BetterVencord](#adding-custom-plugins-in-bettervencord)
 
 ---
 
@@ -253,6 +254,31 @@ git pull
 
 ## 🛑 **Read This Before Using!**
 > To run BetterDiscord plugins on Vencord, you **must enable the BD Compatibility Layer** plugin first. Without it, BD plugins will not work!
+
+---
+
+## 🧩 Adding Custom Plugins in BetterVencord
+
+Follow these steps to add custom plugins (such as ZeresPluginLibrary) in BetterVencord:
+
+1. **Open Discord.**
+2. **Go to User Settings** (the gear icon at the bottom left).
+3. **Scroll down to the Vencord section** in the sidebar and click on **Plugins**.
+4. **Enable the "BD Compatibility Layer" plugin.**
+5. **Click the cog wheel** (⚙️) next to the BD Compatibility Layer plugin to open its settings.
+6. **In the settings, find the field labeled `Plugin Url 1`.**
+7. **Copy and paste the following link into `Plugin Url 1`:**
+   ```
+   @https://raw.githubusercontent.com/SushiSanCat/BDPluginLibrary/refs/heads/master/release/0PluginLibrary.plugin.js
+   ```
+8. **Click "Save & Close"** to apply the changes.
+9. **Restart Discord** to ensure the plugin is loaded.
+10. **Go back to User Settings → Vencord → Plugins.**
+11. **Find and enable the "ZeresPluginLibrary" plugin** (it should now appear in your plugin list).
+
+You can now import and use most BetterDiscord plugins in BetterVencord!
+
+> **Tip:** Always make sure the BD Compatibility Layer and ZeresPluginLibrary are enabled for maximum compatibility with BD plugins.
 
 ---
 
