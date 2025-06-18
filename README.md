@@ -85,6 +85,8 @@ Before you begin, make sure you have the following installed on your system:
   ```
   You should see a version number (e.g., `8.10.2`).
 
+  Or, if you prefer, you can visit the [pnpm installation page](https://pnpm.io/installation) for more options and instructions.
+
 ---
 
 ### 2. Clone the Source Code
