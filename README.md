@@ -57,35 +57,110 @@
 
 ## ⚡ Installation
 
+Follow these detailed steps to install BetterVencord. Each step is specific to ensure a smooth setup process.
+
+---
+
 ### 1. Prerequisites
-- [Node.js (LTS recommended)](https://nodejs.org/en)
-- [pnpm](https://pnpm.io/installation)
 
-### 2. Clone the Source
-```sh
-git clone https://github.com/SushiSanCat/BetterVencord.git
-cd BetterVencord
-```
+Before you begin, make sure you have the following installed on your system:
 
-### 3. Compile
-```sh
-pnpm install --frozen-lockfile
-pnpm build --standalone
+- **Node.js (LTS version recommended):**  
+  Download and install from [nodejs.org](https://nodejs.org/en).  
+  To check if Node.js is installed, open your terminal (Command Prompt on Windows, Terminal on macOS/Linux) and run:
+  ```sh
+  node -v
+  ```
+  You should see a version number (e.g., `v18.18.0`).
 
-# For web usage (optional):
-pnpm buildWeb --standalone
-```
-- Compiled files will be in the `dist` folder. Keep this folder intact for BetterVencord to work.
+- **pnpm (package manager):**  
+  Install pnpm by running the following command in your terminal:
+  ```sh
+  npm install -g pnpm
+  ```
+  To verify installation, run:
+  ```sh
+  pnpm -v
+  ```
+  You should see a version number (e.g., `8.10.2`).
+
+---
+
+### 2. Clone the Source Code
+
+1. **Open your terminal** (Command Prompt, PowerShell, or Terminal).
+
+2. **Navigate to the directory** where you want to download BetterVencord. For example:
+   ```sh
+   cd ~/Downloads
+   ```
+3. **Clone the repository** by running:
+   ```sh
+   git clone https://github.com/SushiSanCat/BetterVencord.git
+   ```
+4. **Enter the project directory:**
+   ```sh
+   cd BetterVencord
+   ```
+
+---
+
+### 3. Install Dependencies and Build
+
+1. **Install all required dependencies** (this will use the versions locked in the repository):
+   ```sh
+   pnpm install --frozen-lockfile
+   ```
+2. **Build BetterVencord for desktop usage:**
+   ```sh
+   pnpm build --standalone
+   ```
+   - This will generate the compiled files in the `dist` folder.
+
+2. **(Optional) Build for web usage:**  
+   If you want to use BetterVencord as a browser extension or UserScript, run:
+   ```sh
+   pnpm buildWeb --standalone
+   ```
+
+> **Note:**  
+> Do **not** delete or move the `dist` folder after building. All necessary files for BetterVencord to function are inside.
+
+---
 
 ### 4. Install Vencord
-- Run [Vencord's official installer](https://github.com/Vendicated/Vencord#installing--uninstalling).
-- **Windows:** If your Discord install path is protected, run the installer as admin.
 
-### 5. Copy Files
-- **Backup your Vencord user data!**
-  - Linux: `$XDG_CONFIG_HOME/Vencord/` (usually `~/.config/Vencord/`)
-  - Windows: `%appdata%/Vencord`
-- Copy your compiled `dist` folder into your Vencord user data directory.
+1. **Download and run the official Vencord installer:**  
+   Go to [Vencord's official installation page](https://github.com/Vendicated/Vencord#installing--uninstalling) and follow the instructions for your operating system.
+
+2. **Windows users:**  
+   - If you receive a permissions error or your Discord install path is protected, **right-click the installer and select "Run as administrator"**.
+
+---
+
+### 5. Copy Compiled Files to Vencord User Data
+
+1. **Backup your existing Vencord user data** (highly recommended):
+   - **Linux:**  
+     Your data is usually in `$XDG_CONFIG_HOME/Vencord/` (commonly `~/.config/Vencord/`).
+   - **Windows:**  
+     Your data is in `%appdata%/Vencord` (e.g., `C:\Users\<YourName>\AppData\Roaming\Vencord`).
+
+   To back up, simply copy the entire `Vencord` folder to a safe location.
+
+2. **Copy the compiled `dist` folder:**
+   - After building, locate the `dist` folder inside your `BetterVencord` project directory.
+   - Copy the entire `dist` folder and paste it into your Vencord user data directory:
+     - **Linux:** `~/.config/Vencord/`
+     - **Windows:** `%appdata%\Vencord\`
+   - If prompted, choose to overwrite existing files.
+
+3. **Restart Discord** to apply the changes.
+
+---
+
+**You have now installed BetterVencord!**  
+If you encounter any issues, refer to the Troubleshooting section below.
 
 ---
 
