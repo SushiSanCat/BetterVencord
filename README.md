@@ -63,14 +63,15 @@
 
 ### 2. Clone the Source
 ```sh
-git clone https://github.com/Davilarek/Vencord.git
-cd Vencord
+git clone https://github.com/SushiSanCat/BetterVencord.git
+cd BetterVencord
 ```
 
 ### 3. Compile
 ```sh
 pnpm install --frozen-lockfile
 pnpm build --standalone
+
 # For web usage (optional):
 pnpm buildWeb --standalone
 ```
